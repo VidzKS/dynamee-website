@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The EBITDA Protection Toolkit — Case Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#12151B;
+    --panel:#181C24;
+    --panel-raised:#1F2430;
+    --rule:#2B303B;
+    --rule-soft:#20242E;
+    --text:#EDEAE2;
+    --text-muted:#8B93A1;
+    --text-faint:#5C6272;
+    --brass:#C7A24A;
+    --brass-dim:#8C7639;
+    --gain:#7FAF8F;
+    --gain-dim:#3D4A41;
+    --risk:#B9694B;
+    --font-display:'Fraunces', serif;
+    --font-body:'Inter', sans-serif;
+    --font-mono:'IBM Plex Mono', monospace;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+
+  body{
+    background:var(--ink);
+    color:var(--text);
+    font-family:var(--font-body);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .wrap{max-width:1080px;margin:0 auto;padding:0 32px;}
+
+  ::selection{background:var(--brass-dim);color:var(--text);}
+
+  a{color:inherit;}
+
+  /* ---------- Reveal on scroll ---------- */
+  .reveal{opacity:0;transform:translateY(18px);transition:opacity .7s ease, transform .7s ease;}
+  .reveal.in{opacity:1;transform:translateY(0);}
+  @media (prefers-reduced-motion: reduce){
+    .reveal{opacity:1;transform:none;transition:none;}
+  }
+
+  /* ---------- Eyebrow / labels ---------- */
+  .eyebrow{
+    font-family:var(--font-mono);
+    font-size:12px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--brass);
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .eyebrow::before{
+    content:'';
+    width:16px;height:1px;
+    background:var(--brass-dim);
+    display:inline-block;
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    padding:96px 0 72px;
+    border-bottom:1px solid var(--rule);
+    position:relative;
+    overflow:hidden;
+  }
+  .hero::after{
+    content:'';
+    position:absolute;
+    top:-40%;right:-10%;
+    width:520px;height:520px;
+    background:radial-gradient(circle, rgba(199,162,74,0.10) 0%, rgba(199,162,74,0) 70%);
+    pointer-events:none;
+  }
+  .hero h1{
+    font-family:var(--font-display);
+    font-weight:500;
+    font-size:clamp(38px, 5.4vw, 64px);
+    line-height:1.06;
+    letter-spacing:-0.01em;
+    margin:22px 0 20px;
+    max-width:14ch;
+  }
+  .hero .dek{
+    font-size:18px;
+    color:var(--text-muted);
+    max-width:56ch;
+    margin-bottom:44px;
+  }
+
+  .hero-stat-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:0;
+    border-top:1px solid var(--rule);
+  }
+  .hero-stat{
+    flex:1 1 200px;
+    padding:22px 24px 0 0;
+    border-right:1px solid var(--rule-soft);
+  }
+  .hero-stat:last-child{border-right:none;}
+  .hero-stat .num{
+    font-family:var(--font-mono);
+    font-size:clamp(26px,3vw,34px);
+    color:var(--brass);
+    font-weight:600;
+  }
+  .hero-stat .lbl{
+    font-size:13px;
+    color:var(--text-muted);
+    margin-top:4px;
+  }
+
+  /* ---------- Section shell ---------- */
+  section{padding:88px 0;border-bottom:1px solid var(--rule);}
+  section:last-of-type{border-bottom:none;}
+  .section-head{max-width:62ch;margin-bottom:52px;}
+  .section-head h2{
+    font-family:var(--font-display);
+    font-weight:500;
+    font-size:clamp(28px,3.4vw,38px);
+    margin:18px 0 14px;
+    letter-spacing:-0.01em;
+  }
+  .section-head p{color:var(--text-muted);font-size:16.5px;max-width:58ch;}
+
+  /* ---------- CONTEXT ---------- */
+  .context-body{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:14px;
+    max-width:70ch;
+    color:var(--text);
+    font-size:17px;
+  }
+  .context-body p{color:#C9C6BD;}
+  .context-list{
+    list-style:none;
+    margin:6px 0 10px;
+    padding:0;
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+  }
+  .context-list li{
+    display:flex;
+    align-items:baseline;
+    gap:14px;
+    padding:12px 0;
+    border-bottom:1px solid var(--rule-soft);
+    color:var(--text);
+    font-size:16px;
+  }
+  .context-list .tag{
+    font-family:var(--font-mono);
+    font-size:13px;
+    color:var(--brass);
+    min-width:44px;
+    flex-shrink:0;
+  }
+
+  /* ---------- ENGINE (process loop) ---------- */
+  .engine{position:relative;}
+  .engine-flow{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:0;
+    position:relative;
+    margin-bottom:6px;
+  }
+  .engine-card{
+    border-top:2px solid var(--brass-dim);
+    padding:20px 20px 0 0;
+    position:relative;
+  }
+  .engine-card .phase-num{
+    font-family:var(--font-mono);
+    font-size:12px;
+    color:var(--text-faint);
+    margin-bottom:10px;
+    display:block;
+  }
+  .engine-card h3{
+    font-family:var(--font-body);
+    font-weight:600;
+    font-size:16.5px;
+    color:var(--text);
+    margin-bottom:10px;
+  }
+  .engine-card p{
+    font-size:14px;
+    color:var(--text-muted);
+    line-height:1.55;
+  }
+  .engine-card::before{
+    content:'';
+    position:absolute;
+    top:-2px;left:0;
+    width:0;height:2px;
+    background:var(--brass);
+    transition:width 1s ease;
+  }
+  .engine-card.in::before{width:100%;}
+
+  .loop-caption{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-top:34px;
+    padding-top:20px;
+    border-top:1px dashed var(--rule);
+    font-family:var(--font-mono);
+    font-size:12.5px;
+    color:var(--text-faint);
+  }
+  .loop-caption svg{flex-shrink:0;}
+
+  /* ---------- TIMELINE / control chart ---------- */
+  .chart-panel{
+    background:var(--panel);
+    border:1px solid var(--rule);
+    padding:28px 24px 8px;
+    margin-bottom:40px;
+  }
+  .chart-legend{
+    display:flex;
+    gap:24px;
+    flex-wrap:wrap;
+    font-family:var(--font-mono);
+    font-size:12px;
+    color:var(--text-muted);
+    margin-bottom:6px;
+  }
+  .chart-legend span{display:flex;align-items:center;gap:7px;}
+  .swatch{width:14px;height:2px;display:inline-block;}
+  .chart-note{
+    font-size:12px;
+    color:var(--text-faint);
+    font-style:italic;
+    margin-top:6px;
+  }
+
+  .waves{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:20px;
+  }
+  .wave-card{
+    background:var(--panel);
+    border:1px solid var(--rule);
+    padding:26px 22px;
+  }
+  .wave-card .year{
+    font-family:var(--font-mono);
+    font-size:13px;
+    color:var(--brass);
+    letter-spacing:.06em;
+  }
+  .wave-card h4{
+    font-family:var(--font-body);
+    font-weight:600;
+    font-size:17px;
+    margin:10px 0 12px;
+  }
+  .wave-card p{
+    font-size:14px;
+    color:var(--text-muted);
+    margin-bottom:16px;
+  }
+  .wave-impact{
+    font-family:var(--font-mono);
+    font-size:22px;
+    color:var(--gain);
+    font-weight:600;
+    border-top:1px solid var(--rule-soft);
+    padding-top:14px;
+  }
+  .wave-impact span{
+    display:block;
+    font-family:var(--font-body);
+    font-size:12px;
+    color:var(--text-faint);
+    font-weight:400;
+    margin-top:3px;
+  }
+
+  /* ---------- IMPACT stats ---------- */
+  .impact-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:1px;
+    background:var(--rule);
+    border:1px solid var(--rule);
+  }
+  .impact-cell{
+    background:var(--ink);
+    padding:32px 30px;
+  }
+  .impact-cell .num{
+    font-family:var(--font-mono);
+    font-size:clamp(24px,2.6vw,30px);
+    color:var(--text);
+    font-weight:600;
+  }
+  .impact-cell .num em{color:var(--gain);font-style:normal;}
+  .impact-cell .lbl{
+    color:var(--text-muted);
+    font-size:14px;
+    margin-top:8px;
+    max-width:38ch;
+  }
+
+  /* ---------- REPLICABILITY ---------- */
+  .replic-list{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:24px;
+    margin-bottom:56px;
+  }
+  .replic-step{
+    padding-top:18px;
+    border-top:1px solid var(--rule);
+  }
+  .replic-step .rn{
+    font-family:var(--font-mono);
+    font-size:12px;
+    color:var(--brass);
+  }
+  .replic-step h4{
+    font-family:var(--font-body);
+    font-size:16px;
+    font-weight:600;
+    margin:10px 0 8px;
+  }
+  .replic-step p{
+    font-size:13.5px;
+    color:var(--text-muted);
+  }
+
+  .cta-strip{
+    background:var(--panel-raised);
+    border:1px solid var(--rule);
+    padding:40px 40px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:24px;
+    flex-wrap:wrap;
+  }
+  .cta-strip h3{
+    font-family:var(--font-display);
+    font-weight:500;
+    font-size:22px;
+    max-width:32ch;
+  }
+  .cta-btn{
+    font-family:var(--font-mono);
+    font-size:13px;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    color:var(--ink);
+    background:var(--brass);
+    padding:14px 26px;
+    border:none;
+    text-decoration:none;
+    white-space:nowrap;
+    display:inline-block;
+    transition:background .2s ease;
+  }
+  .cta-btn:hover{background:#D9B564;}
+
+  footer{
+    padding:28px 0 60px;
+    font-size:12.5px;
+    color:var(--text-faint);
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width:900px){
+    .engine-flow{grid-template-columns:repeat(2,1fr);row-gap:36px;}
+    .waves{grid-template-columns:1fr;}
+    .impact-grid{grid-template-columns:1fr;}
+    .replic-list{grid-template-columns:repeat(2,1fr);}
+  }
+  @media (max-width:600px){
+    .wrap{padding:0 20px;}
+    .hero{padding:64px 0 48px;}
+    section{padding:60px 0;}
+    .engine-flow{grid-template-columns:1fr;}
+    .replic-list{grid-template-columns:1fr;}
+    .cta-strip{flex-direction:column;align-items:flex-start;}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow reveal in">Case Study — CFO Advisory for Private Equity</div>
+    <h1 class="reveal in">The EBITDA Protection Toolkit</h1>
+    <p class="dek reveal in">Rapid profitability interventions run across three separate macro disruptions — without cutting the growth investments the business needed to come out ahead on the other side.</p>
+
+    <div class="hero-stat-row reveal in">
+      <div class="hero-stat">
+        <div class="num">$19M</div>
+        <div class="lbl">Margin protected, 2020–2025</div>
+      </div>
+      <div class="hero-stat">
+        <div class="num">3</div>
+        <div class="lbl">Disruption cycles, one playbook</div>
+      </div>
+      <div class="hero-stat">
+        <div class="num">&lt;2 wks</div>
+        <div class="lbl">To collect owner-level action plans</div>
+      </div>
+      <div class="hero-stat">
+        <div class="num">12 mo</div>
+        <div class="lbl">Pivot roadmap built alongside the fix</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="context">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Context</div>
+      <h2>Three shocks, one repeatable system</h2>
+    </div>
+    <div class="context-body reveal">
+      <p>Multiple macro and internal events required focused special projects to maintain profitability:</p>
+      <ul class="context-list">
+        <li><span class="tag">2020</span> COVID disruption</li>
+        <li><span class="tag">2023</span> Margin degrowth risk</li>
+        <li><span class="tag">2025</span> EdTech slowdown from AI disruption</li>
+      </ul>
+      <p>The business needed a rigorous, proactive intervention engine linking revenue scenarios, cost actions, and monthly performance tracking.</p>
+    </div>
+  </div>
+</section>
+
+<section class="engine">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">The Engine</div>
+      <h2>A four-phase cycle</h2>
+      <p>Used in 2020, 2023, and 2025 — not rebuilt each time, just re-run.</p>
+    </div>
+
+    <div class="engine-flow">
+      <div class="engine-card reveal">
+        <span class="phase-num">01 — Forecast &amp; Simulate</span>
+        <h3>Model the range</h3>
+        <p>Monthly revenue and cost forecasting with vertical sales, operations, and SG&amp;A leads. Worst-, base-, and best-case P&amp;L simulations set actuals-plus-forecast against budget at both revenue and EBITDA level.</p>
+      </div>
+      <div class="engine-card reveal">
+        <span class="phase-num">02 — Target &amp; Assign</span>
+        <h3>Name the gap</h3>
+        <p>Target EBITDA fixed at base-case revenue. The shortfall split into specific cost and revenue actions, each with an owner and a monthly dollar value — collected within two weeks.</p>
+      </div>
+      <div class="engine-card reveal">
+        <span class="phase-num">03 — Execute &amp; Govern</span>
+        <h3>Protect the investments worth keeping</h3>
+        <p>Strategic investments reviewed through a Finance and CFO-led ROI lens before approval. HR partnered on named headcount action lists, termination timelines, and daily/weekly CXO trackers.</p>
+      </div>
+      <div class="engine-card reveal">
+        <span class="phase-num">04 — Monitor &amp; Carry Forward</span>
+        <h3>Hold the gains</h3>
+        <p>Actual profitability tracked monthly against target, with future-month interventions adjusted for new risk or opportunity. Structural gains held in place until the top line recovered. Carried forward structural gains into future-year P&L by
+maintaining controls until topline recovered.​</p>
+      </div>
+    </div>
+
+    
+  </div>
+</section>
+
+<section class="timeline">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Three Disruptions, One Playbook</div>
+      <h2>Same engine, three different triggers</h2>
+      <p>Each cycle followed the identical four-phase process above — only the trigger and the numbers changed.</p>
+    </div>
+
+    <div class="chart-panel reveal">
+      <div class="chart-legend">
+        <span><i class="swatch" style="background:#4A5062;"></i>Target EBITDA</span>
+        <span><i class="swatch" style="background:#C7A24A;"></i>Actual EBITDA</span>
+      </div>
+      <svg viewBox="0 0 1000 320" width="100%" style="display:block;overflow:visible;">
+        <!-- gridlines -->
+        <g stroke="#20242E" stroke-width="1">
+          <line x1="40" y1="40" x2="960" y2="40"/>
+          <line x1="40" y1="120" x2="960" y2="120"/>
+          <line x1="40" y1="200" x2="960" y2="200"/>
+          <line x1="40" y1="280" x2="960" y2="280"/>
+        </g>
+        <!-- target line -->
+        <polyline points="40,190 171,182 303,175 434,168 566,158 697,148 828,138 960,128"
+          fill="none" stroke="#4A5062" stroke-width="2" stroke-dasharray="5 5"/>
+        <!-- actual line -->
+        <path d="M40,190 C100,220 140,290 171,290 C210,290 250,175 303,168 C340,164 400,230 434,255 C470,270 520,150 566,138 C610,128 660,215 697,232 C735,240 780,120 828,105 C870,95 920,100 960,92"
+          fill="none" stroke="#C7A24A" stroke-width="2.5"/>
+        <!-- shock markers -->
+        <g font-family="IBM Plex Mono, monospace" font-size="12" fill="#8B93A1">
+          <line x1="171" y1="40" x2="171" y2="280" stroke="#2B303B" stroke-width="1"/>
+          <circle cx="171" cy="290" r="4" fill="#B9694B"/>
+          <text x="171" y="304" text-anchor="middle" fill="#C9C6BD">2020</text>
+
+          <line x1="566" y1="40" x2="566" y2="280" stroke="#2B303B" stroke-width="1"/>
+          <circle cx="566" cy="255" r="4" fill="#B9694B"/>
+          <text x="566" y="304" text-anchor="middle" fill="#C9C6BD">2023</text>
+
+          <line x1="828" y1="40" x2="828" y2="280" stroke="#2B303B" stroke-width="1"/>
+          <circle cx="828" cy="232" r="4" fill="#B9694B"/>
+          <text x="828" y="304" text-anchor="middle" fill="#C9C6BD">2025</text>
+        </g>
+      </svg>
+      <div class="chart-note">Illustrative trajectory — shows the shock-and-recovery pattern of each cycle, not literal monthly figures.</div>
+    </div>
+
+    <div class="waves">
+      <div class="wave-card reveal">
+        <div class="year">2020</div>
+        <h4>COVID-19 disruption</h4>
+        <p>A sudden, business-wide demand shock with no precedent to model against.</p>
+        <div class="wave-impact">$5M<span>Margin improvement from cost actions</span></div>
+      </div>
+      <div class="wave-card reveal">
+        <div class="year">2023</div>
+        <h4>Margin degrowth risk</h4>
+        <p>Structural cost pressure threatened the EBITDA trajectory ahead of budget season.</p>
+        <div class="wave-impact">$9M<span>Margin improvement from cost actions</span></div>
+      </div>
+      <div class="wave-card reveal">
+        <div class="year">2025</div>
+        <h4>EdTech slowdown (AI disruption)</h4>
+        <p>Category-wide pullback as AI reshaped demand across the EdTech market.</p>
+        <div class="wave-impact">$5M<span>Margin improvement from cost actions</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="impact">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Impact Delivered</div>
+      <h2>Protection, not just cost-cutting</h2>
+    </div>
+
+    <div class="impact-grid reveal">
+      <div class="impact-cell">
+        <div class="num"><em>$19M</em> across three cycles</div>
+        <div class="lbl">Margin improvement delivered through cost-reduction initiatives alone — $5M in 2020, $9M in 2023, $5M in 2025.</div>
+      </div>
+      <div class="impact-cell">
+        <div class="num">YoY growth held</div>
+        <div class="lbl">Growth trajectory maintained in both absolute EBITDA and EBITDA % terms through every disruption.</div>
+      </div>
+      <div class="impact-cell">
+        <div class="num">12-month pivot roadmap</div>
+        <div class="lbl">Built alongside the fix, directing the business toward fast-growing areas and out of slowing ones.</div>
+      </div>
+      <div class="impact-cell">
+        <div class="num">Capital freed, not just saved</div>
+        <div class="lbl">Funds released for AI, technology, sales, and leadership investment — the toolkit protected growth spend, it didn't just cut costs.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="replicability">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Replicability Across Portfolio</div>
+      <h2>Built to run again, on a different asset</h2>
+    </div>
+
+    <div class="replic-list reveal">
+      <div class="replic-step">
+        <span class="rn">01</span>
+        <h4>Diagnose</h4>
+        <p>Identify pain points and slow-growth areas with an external, unfiltered lens.</p>
+      </div>
+      <div class="replic-step">
+        <span class="rn">02</span>
+        <h4>Design</h4>
+        <p>Draft targeted intervention plans, split into named, owner-level actions.</p>
+      </div>
+      <div class="replic-step">
+        <span class="rn">03</span>
+        <h4>Execute</h4>
+        <p>Project-manage delivery through owner-level trackers, reviewed on a fixed cadence.</p>
+      </div>
+      <div class="replic-step">
+        <span class="rn">04</span>
+        <h4>Report</h4>
+        <p>Communicate progress to management and PE stakeholders in a consistent format.</p>
+      </div>
+    </div>
+
+    <div class="cta-strip reveal">
+      <h3>Considering an EBITDA protection sprint for a portfolio company?</h3>
+      <a class="cta-btn" href="#contact">Start a conversation</a>
+    </div>
+  </div>
+</section>
+
+<footer class="wrap">
+  © Case study anonymized for portfolio confidentiality. Figures reflect cumulative cost-reduction impact reported across the described periods.
+</footer>
+
+<script>
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); } });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal, .engine-card').forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
