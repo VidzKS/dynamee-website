@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The PE onboarding &amp; Investor Relations model — Case Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#12151B;
+    --panel:#181C24;
+    --panel-raised:#1F2430;
+    --rule:#2B303B;
+    --rule-soft:#20242E;
+    --text:#EDEAE2;
+    --text-muted:#8B93A1;
+    --text-faint:#5C6272;
+    --brass:#C7A24A;
+    --brass-dim:#8C7639;
+    --gain:#7FAF8F;
+    --gain-dim:#3D4A41;
+    --risk:#B9694B;
+    --font-display:'Fraunces', serif;
+    --font-body:'Inter', sans-serif;
+    --font-mono:'IBM Plex Mono', monospace;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+
+  body{
+    background:var(--ink);
+    color:var(--text);
+    font-family:var(--font-body);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .wrap{max-width:1080px;margin:0 auto;padding:0 32px;}
+
+  ::selection{background:var(--brass-dim);color:var(--text);}
+
+  a{color:inherit;}
+
+  /* ---------- Reveal on scroll ---------- */
+  .reveal{opacity:0;transform:translateY(18px);transition:opacity .7s ease, transform .7s ease;}
+  .reveal.in{opacity:1;transform:translateY(0);}
+  @media (prefers-reduced-motion: reduce){
+    .reveal{opacity:1;transform:none;transition:none;}
+  }
+
+  /* ---------- Eyebrow / labels ---------- */
+  .eyebrow{
+    font-family:var(--font-mono);
+    font-size:18px;
+    font-weight: 600;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--brass);
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .eyebrow::before{
+    content:'';
+    width:24px;height:2px;
+    background:var(--brass-dim);
+    display:inline-block;
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    padding:96px 0 72px;
+    border-bottom:1px solid var(--rule);
+    position:relative;
+    overflow:hidden;
+  }
+  .hero::after{
+    content:'';
+    position:absolute;
+    top:-40%;right:-10%;
+    width:520px;height:520px;
+    background:radial-gradient(circle, rgba(199,162,74,0.10) 0%, rgba(199,162,74,0) 70%);
+    pointer-events:none;
+  }
+  .hero h1{
+    font-family:var(--font-display);
+    font-weight:500;
+    font-size:clamp(38px, 5.2vw, 64px);
+    line-height:1.1;
+    letter-spacing:-0.01em;
+    margin:22px 0 20px;
+    max-width:20ch;
+  }
+  .hero .dek{
+    font-size:18px;
+    color:var(--text-muted);
+    max-width:58ch;
+    margin-bottom:44px;
+  }
+
+  .hero-stat-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:0;
+    border-top:1px solid var(--rule);
+  }
+  .hero-stat{
+    flex:1 1 200px;
+    padding:22px 24px 0 0;
+    border-right:1px solid var(--rule-soft);
+  }
+  .hero-stat:last-child{border-right:none;}
+  .hero-stat .num{
+    font-family:var(--font-mono);
+    font-size:clamp(26px,3vw,34px);
+    color:var(--brass);
+    font-weight:600;
+  }
+  .hero-stat .lbl{
+    font-size:13px;
+    color:var(--text-muted);
+    margin-top:4px;
+  }
+
+  /* ---------- Section shell ---------- */
+  section{padding:44px 0;border-bottom:1px solid var(--rule);}
+  section:last-of-type{border-bottom:none;}
+  .section-head{max-width:72ch;margin-bottom:28px;}
+  .section-head h2{
+    font-family:var(--font-display);
+    font-weight:500;
+    font-size:clamp(28px,3.4vw,38px);
+    margin:18px 0 14px;
+    letter-spacing:-0.01em;
+  }
+  .section-head p{color:var(--text-muted);font-size:18px;max-width:64ch;}
+
+  /* ---------- CONTEXT ---------- */
+  .context-body{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:14px;
+    max-width:74ch;
+    color:var(--text);
+    font-size:17px;
+  }
+  .context-body p{color:#C9C6BD;}
+  .context-list{
+    list-style:none;
+    margin:6px 0 10px;
+    padding:0;
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+  }
+  .context-list li{
+    display:flex;
+    align-items:baseline;
+    gap:14px;
+    padding:12px 0;
+    border-bottom:1px solid var(--rule-soft);
+    color:var(--text);
+    font-size:16px;
+  }
+  .context-list .tag{
+    font-family:var(--font-mono);
+    font-size:13px;
+    color:var(--brass);
+    min-width:110px;
+    flex-shrink:0;
+  }
+
+  /* ---------- ACTIONS / ENGINE ---------- */
+  .engine{position:relative;}
+  .engine-flow{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:16px;
+    position:relative;
+    margin-bottom:6px;
+  }
+  .engine-card{
+    background: var(--panel);
+    border: 1px solid var(--rule-soft);
+    border-top: 3px solid var(--brass-dim);
+    padding: 24px;
+    position:relative;
+    transition: transform .2s ease, border-color .2s ease;
+  }
+  .engine-card:hover {
+    border-color: var(--brass);
+    transform: translateY(-2px);
+  }
+  .engine-card .phase-num{
+    font-family:var(--font-mono);
+    font-size:12px;
+    color:var(--brass);
+    margin-bottom:12px;
+    display:block;
+  }
+  .engine-card h3{
+    font-family:var(--font-body);
+    font-weight:600;
+    font-size:17px;
+    color:var(--text);
+    margin-bottom:12px;
+  }
+  .engine-card p{
+    font-size:13.5px;
+    color:var(--text-muted);
+    line-height:1.55;
+  }
+  .engine-card::before{
+    content:'';
+    position:absolute;
+    top:-2px;left:0;
+    width:0;height:2px;
+    background:var(--brass);
+    transition:width 1s ease;
+  }
+  .engine-card.in::before{width:100%;}
+
+  /* ---------- IMPACT stats ---------- */
+  .impact-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:1px;
+    background:var(--rule);
+    border:1px solid var(--rule);
+  }
+  .impact-cell{
+    background:var(--ink);
+    padding:32px 30px;
+  }
+  .impact-cell .num{
+    font-family:var(--font-mono);
+    font-size:clamp(24px,2.6vw,30px);
+    color:var(--text);
+    font-weight:600;
+  }
+  .impact-cell .num em{color:var(--gain);font-style:normal;}
+  .impact-cell .lbl{
+    color:var(--text-muted);
+    font-size:14px;
+    margin-top:8px;
+    max-width:42ch;
+  }
+
+  /* ---------- REPLICABILITY ---------- */
+  .replic-list{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:24px;
+    margin-bottom:56px;
+  }
+  .replic-step{
+    padding-top:18px;
+    border-top:1px solid var(--rule);
+  }
+  .replic-step .rn{
+    font-family:var(--font-mono);
+    font-size:12px;
+    color:var(--brass);
+  }
+  .replic-step h4{
+    font-family:var(--font-body);
+    font-size:16px;
+    font-weight:600;
+    margin:10px 0 8px;
+  }
+  .replic-step p{
+    font-size:13.5px;
+    color:var(--text-muted);
+  }
+
+  .cta-strip{
+    background:var(--panel-raised);
+    border:1px solid var(--rule);
+    padding:40px 40px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:24px;
+    flex-wrap:wrap;
+  }
+  .cta-strip h3{
+    font-family:var(--font-display);
+    font-weight:500;
+    font-size:22px;
+    max-width:32ch;
+  }
+  .cta-btn{
+    font-family:var(--font-mono);
+    font-size:13px;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    color:var(--ink);
+    background:var(--brass);
+    padding:14px 26px;
+    border:none;
+    text-decoration:none;
+    white-space:nowrap;
+    display:inline-block;
+    transition:background .2s ease;
+  }
+  .cta-btn:hover{background:#D9B564;}
+
+  footer{
+    padding:28px 0 60px;
+    font-size:12.5px;
+    color:var(--text-faint);
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width:900px){
+    .engine-flow{grid-template-columns:repeat(2,1fr);row-gap:24px;}
+    .impact-grid{grid-template-columns:1fr;}
+    .replic-list{grid-template-columns:repeat(2,1fr);}
+  }
+  @media (max-width:600px){
+    .wrap{padding:0 20px;}
+    .hero{padding:64px 0 48px;}
+    section{padding:60px 0;}
+    .engine-flow{grid-template-columns:1fr;}
+    .replic-list{grid-template-columns:1fr;}
+    .cta-strip{flex-direction:column;align-items:flex-start;}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow reveal in">Case Study — Investor Relations &amp; FP&amp;A Advisory</div>
+    <h1>Seamless PE Onboarding &amp; Investor Relation Model</h1>
+    <p class="dek reveal in">Built a single-source IR and reporting engine to rapidly onboard a newly acquired data analytics and AI portfolio company into a PE firm's governance ecosystem.</p>
+
+    <div class="hero-stat-row reveal in">
+      <div class="hero-stat">
+        <div class="num">4 Months</div>
+        <div class="lbl">Full structural onboarding cycle completed</div>
+      </div>
+      <div class="hero-stat">
+        <div class="num">5-Year</div>
+        <div class="lbl">Granular forecasting model architecture built</div>
+      </div>
+      <div class="hero-stat">
+        <div class="num">2.5 Months</div>
+        <div class="lbl">Strategy mapped to actionable timelines</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="context">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Context</div>
+      <h2>The challenge of immediate governance alignment</h2>
+    </div>
+    <div class="context-body reveal">
+      <p>A high-growth enterprise specializing in data analytics and AI for global enterprises was acquired by a private equity firm, triggering immediate organizational needs:</p>
+      <ul class="context-list">
+        <li><span class="tag">The Acquisition</span> Required rapid institutional integration into the PE firm's rigid reporting, operational governance, and financial review standards.</li>
+        <li><span class="tag">The Objective</span> Establish unmatched pipeline transparency, executive reporting consistency, and absolute investor confidence from Day One.</li>
+      </ul>
+      <p>The solution demanded an adaptive interim operational layer connecting corporate financial data directly to the private equity operating team and Board metrics.</p>
+    </div>
+  </div>
+</section>
+
+<section class="engine">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Actions Taken</div>
+      <h2>The implementation engine</h2>
+      <p>Parallel execution tracks running over a 4-month transition timeline to engineer a unified reporting stack.</p>
+    </div>
+
+    <div class="engine-flow">
+      <div class="engine-card reveal">
+        <span class="phase-num">01 — Core infrastructure</span>
+        <h3>Form dedicated IR team</h3>
+        <p>Assembled a specialized 2-person Investor Relations team combining institutional FP&amp;A models with rigorous M&amp;A reporting frameworks to manage the workflow baseline.</p>
+      </div>
+      <div class="engine-card reveal">
+        <span class="phase-num">02 — Strategic alignment</span>
+        <h3>OGSM &amp; target mapping</h3>
+        <p>Coordinated the overarching 5-year OGSM strategy across multiple workstreams. Transformed complex consultant output and recommendations into actionable corporate goals within 2.5 months.</p>
+      </div>
+      <div class="engine-card reveal">
+        <span class="phase-num">03 — Financial architecture</span>
+        <h3>5-Year financial model</h3>
+        <p>Engineered a single-source model tracking top-tier client analytics, organic/inorganic expansion vectors, comprehensive SG&amp;A structures, and structural corporate overheads.</p>
+      </div>
+      <div class="engine-card reveal">
+        <span class="phase-num">04 — Automation stack</span>
+        <h3>Comprehensive automated &amp; reporting </h3>
+        <p>Completed PPR packages. Automated and structured critical reporting arrays: pipelines, P&amp;Ls, headcounts, cash flows, ESG compliance, balance sheets, and covenant monitoring trackers.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="impact">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Impact Delivered</div>
+      <h2>Institutional-grade readiness established</h2>
+    </div>
+
+    <div class="impact-grid reveal">
+      <div class="impact-cell">
+        <div class="num">Onboarded within <em>4 months</em></div>
+        <div class="lbl">Asset structurally aligned to the PE fund's ecosystem across reporting, corporate governance rhythms, and review mechanisms.</div>
+      </div>
+      <div class="impact-cell">
+        <div class="num">High-quality <em>PPR &amp; Board</em> packs</div>
+        <div class="lbl">Delivered context-rich, institutional-grade documentation and materials cleanly ahead of target deadlines.</div>
+      </div>
+      <div class="impact-cell">
+        <div class="num">Rapid <em>data responsiveness</em></div>
+        <div class="lbl">Established friction-free operational turnaround speeds for specialized data requests sent from the PE deal team.</div>
+      </div>
+      <div class="impact-cell">
+        <div class="num">Reliable <em>corporate interface</em></div>
+        <div class="lbl">Created an optimized communication channel linking management, PE operational specialists, and the Board of Directors.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="replicability">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Replicability Across Portfolio</div>
+      <h2>A plug-and-play onboarding framework</h2>
+    </div>
+
+    <div class="replic-list reveal">
+      <div class="replic-step">
+        <span class="rn">01</span>
+        <h4>Interim IR Layer</h4>
+        <p>Deploy turn-key team footprints directly post-acquisition to absorb early reporting shocks.</p>
+      </div>
+      <div class="replic-step">
+        <span class="rn">02</span>
+        <h4>OGSM / Target Formulation</h4>
+        <p>Build unified strategy maps alongside comprehensive long-range financial tracking systems.</p>
+      </div>
+      <div class="replic-step">
+        <span class="rn">03</span>
+        <h4>Internal Data Pipelines</h4>
+        <p>Systematize background reporting lines to deliver clean information to the Board .</p>
+      </div>
+      <div class="replic-step">
+        <span class="rn">04</span>
+        <h4>Annual Budget Integration</h4>
+        <p>Provide end-to-end framework for banking updates, budgeting cycles, and ongoing investor metrics.</p>
+      </div>
+    </div>
+
+    <div class="cta-strip reveal">
+      <h3>Need to accelerate onboarding alignment for a newly acquired asset?</h3>
+      <a class="cta-btn" href="#contact">Start a conversation</a>
+    </div>
+  </div>
+</section>
+
+<footer class="wrap">
+  © Case study anonymized for portfolio confidentiality. Built using institutional private equity governance parameters.
+</footer>
+
+<script>
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); } });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal, .engine-card').forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
